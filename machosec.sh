@@ -277,7 +277,8 @@ checkappbundle() {
 	print
 
 	for appent in $(find "$1"); do
-		file "${appent}" 2>/dev/null | grep -qw "Mach-O 64-bit executable" && \
+		# Including support for 'Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit bundle x86_64] [i386]'
+		file "${appent}" 2>/dev/null | egrep -qw "Mach-O 64-bit executable|Mach-O 64-bit bundle x86_64" && \
 			checkmacho "${appent}"
 	done
 
@@ -344,7 +345,8 @@ main() {
 
 	if [ -f "${ent}" ]; then
 		readonly ent
-		file "${ent}" 2>/dev/null | grep -qw "Mach-O 64-bit executable"
+		# Including support for 'Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit bundle x86_64] [i386]'
+		file "${ent}" 2>/dev/null | egrep -qw "Mach-O 64-bit executable|Mach-O 64-bit bundle x86_64"
 		[ $? -ne 0 ] && \
 			errx "'${ent}' is not a Mach-O 64-bit executable"
 
